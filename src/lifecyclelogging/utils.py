@@ -133,9 +133,7 @@ def add_unlabeled_json(
     Returns:
         str: The message with appended unlabeled JSON data.
     """
-    unlabeled_json_data = (
-        deepcopy(json_data) if isinstance(json_data, Sequence) else [copy(json_data)]
-    )
+    unlabeled_json_data = deepcopy(json_data) if isinstance(json_data, Sequence) else [copy(json_data)]
 
     for jd in unlabeled_json_data:
         msg += "\n:" + wrap_raw_data_for_export(

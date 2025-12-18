@@ -170,9 +170,7 @@ class Logging:
             logging.Logger: The configured logger instance.
         """
         logger_name = logger_name or get_unique_signature(self)
-        log_file_name = (
-            log_file_name or os.getenv("LOG_FILE_NAME") or f"{logger_name}.log"
-        )
+        log_file_name = log_file_name or os.getenv("LOG_FILE_NAME") or f"{logger_name}.log"
         logger = logger or logging.getLogger(logger_name)
         logger.propagate = False
 
@@ -220,10 +218,7 @@ class Logging:
         - verbose=False, or
         - verbose=True and verbose output is enabled
         """
-        if (
-            self.current_context_marker
-            and self.current_context_marker in self.verbosity_bypass_markers
-        ):
+        if self.current_context_marker and self.current_context_marker in self.verbosity_bypass_markers:
             return False
 
         if verbosity > 1:
@@ -286,9 +281,7 @@ class Logging:
         if not storage_marker:
             return
 
-        if (
-            not allowed_levels or log_level in allowed_levels
-        ) and log_level not in denied_levels:
+        if (not allowed_levels or log_level in allowed_levels) and log_level not in denied_levels:
             self.stored_messages[storage_marker].add(
                 f":warning: {msg}" if log_level not in ["debug", "info"] else msg,
             )
@@ -334,16 +327,8 @@ class Logging:
         final_msg = add_json_data(final_msg, json_data, labeled_json_data)
 
         # Normalize levels once here before passing to storage
-        final_allowed = (
-            self._normalize_levels(allowed_levels)
-            if allowed_levels is not None
-            else self.allowed_levels
-        )
-        final_denied = (
-            self._normalize_levels(denied_levels)
-            if denied_levels is not None
-            else self.denied_levels
-        )
+        final_allowed = self._normalize_levels(allowed_levels) if allowed_levels is not None else self.allowed_levels
+        final_denied = self._normalize_levels(denied_levels) if denied_levels is not None else self.denied_levels
 
         self._store_logged_message(
             final_msg,
@@ -385,9 +370,7 @@ class Logging:
         if no_formatting:
             log_file_path.write_text(str(results))
         else:
-            log_file_path.write_text(
-                wrap_raw_data_for_export(results, allow_encoding=True)
-            )
+            log_file_path.write_text(wrap_raw_data_for_export(results, allow_encoding=True))
 
         self.logged_statement(f"New results log: {log_file_path}")
 
@@ -422,10 +405,7 @@ class Logging:
             if isinstance(key_transform, str):
                 if key_transform not in self.KEY_TRANSFORMS:
                     available = ", ".join(self.KEY_TRANSFORMS.keys())
-                    raise ValueError(
-                        f"Unknown key_transform '{key_transform}'. "
-                        f"Available: {available}"
-                    )
+                    raise ValueError(f"Unknown key_transform '{key_transform}'. Available: {available}")
                 return self.KEY_TRANSFORMS[key_transform]
 
         # Legacy unhump_results flag
@@ -452,14 +432,10 @@ class Logging:
         for key, value in data.items():
             transformed_key = transform_fn(key)
             if isinstance(value, Mapping):
-                result[transformed_key] = self._transform_nested_keys(
-                    value, transform_fn
-                )
+                result[transformed_key] = self._transform_nested_keys(value, transform_fn)
             elif isinstance(value, list):
                 result[transformed_key] = [
-                    self._transform_nested_keys(item, transform_fn)
-                    if isinstance(item, Mapping)
-                    else item
+                    self._transform_nested_keys(item, transform_fn) if isinstance(item, Mapping) else item
                     for item in value
                 ]
             else:
@@ -535,9 +511,7 @@ class Logging:
             logging.exit_run(results, key_transform=lambda k: k.upper())
         """
         # Resolve key_transform from various inputs
-        transform_fn = self._resolve_key_transform(
-            key_transform, unhump_results, prefix
-        )
+        transform_fn = self._resolve_key_transform(key_transform, unhump_results, prefix)
         try:
             self.log_results(results, "results")
 
@@ -590,15 +564,11 @@ class Logging:
                                 and field_name not in prefix_denylist
                                 and transformed_key not in prefix_denylist
                             ):
-                                transformed_key = prefix_delimiter.join(
-                                    [prefix, transformed_key]
-                                )
+                                transformed_key = prefix_delimiter.join([prefix, transformed_key])
 
                             if isinstance(field_data, Mapping):
-                                transformed_result[transformed_key] = (
-                                    self._transform_nested_keys(
-                                        field_data, transform_fn
-                                    )
+                                transformed_result[transformed_key] = self._transform_nested_keys(
+                                    field_data, transform_fn
                                 )
                             elif isinstance(field_data, list):
                                 transformed_result[transformed_key] = [
@@ -622,9 +592,7 @@ class Logging:
 
             def encode_result_with_base64(r: Any) -> str:
                 if format_results:
-                    self.logger.info(
-                        "Formatting results before encoding them with base64"
-                    )
+                    self.logger.info("Formatting results before encoding them with base64")
                     r = wrap_raw_data_for_export(r, **format_opts)
 
                 # Ensure we have a string for encoding
@@ -658,8 +626,6 @@ class Logging:
             sys.stdout.write(results)
             sys.exit(0)
         except ExitRunError as exc:
-            err_msg = (
-                f"Failed to dump results because of a formatting error:\n\n{results}"
-            )
+            err_msg = f"Failed to dump results because of a formatting error:\n\n{results}"
             self.logger.critical(err_msg, exc_info=True)
             raise RuntimeError(err_msg) from exc

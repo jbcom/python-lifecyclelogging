@@ -220,9 +220,7 @@ def test_all_log_levels(logger: Logging, log_level: LogLevel) -> None:
 
     assert result == msg
     assert storage_marker in logger.stored_messages
-    stored_msg = next(
-        iter(m for m in logger.stored_messages[storage_marker] if msg in m)
-    )
+    stored_msg = next(iter(m for m in logger.stored_messages[storage_marker] if msg in m))
 
     # Check for warning prefix on appropriate levels
     if log_level not in ["debug", "info"]:

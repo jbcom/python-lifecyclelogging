@@ -39,9 +39,7 @@ class TestLogResults:
         content = json.loads(log_file.read_text())
         assert content == results
 
-    def test_log_results_custom_extension(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_log_results_custom_extension(self, logger: Logging, tmp_path: Path) -> None:
         """Test log_results with custom file extension."""
         os.chdir(tmp_path)
         results = {"key": "value"}
@@ -60,9 +58,7 @@ class TestLogResults:
         assert log_file.exists()
         assert log_file.read_text() == "raw string data"
 
-    def test_log_results_respects_verbosity(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_log_results_respects_verbosity(self, logger: Logging, tmp_path: Path) -> None:
         """Test that log_results respects verbosity settings."""
         os.chdir(tmp_path)
         logger.enable_verbose_output = False
@@ -97,85 +93,57 @@ class TestExitRunNoExit:
         assert "my_key" in output
         assert "nested_key" in output["my_key"]
 
-    def test_exit_run_key_transform_snake_case(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_exit_run_key_transform_snake_case(self, logger: Logging, tmp_path: Path) -> None:
         """Test key_transform with snake_case string."""
         os.chdir(tmp_path)
         results = {"myKey": {"nestedKey": "value"}}
-        output = logger.exit_run(
-            results, key_transform="snake_case", exit_on_completion=False
-        )
+        output = logger.exit_run(results, key_transform="snake_case", exit_on_completion=False)
         assert "my_key" in output
         assert "nested_key" in output["my_key"]
 
-    def test_exit_run_key_transform_camel_case(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_exit_run_key_transform_camel_case(self, logger: Logging, tmp_path: Path) -> None:
         """Test key_transform with camel_case string."""
         os.chdir(tmp_path)
         results = {"my_key": {"nested_key": "value"}}
-        output = logger.exit_run(
-            results, key_transform="camel_case", exit_on_completion=False
-        )
+        output = logger.exit_run(results, key_transform="camel_case", exit_on_completion=False)
         assert "myKey" in output
         assert "nestedKey" in output["myKey"]
 
-    def test_exit_run_key_transform_pascal_case(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_exit_run_key_transform_pascal_case(self, logger: Logging, tmp_path: Path) -> None:
         """Test key_transform with pascal_case string."""
         os.chdir(tmp_path)
         results = {"my_key": {"nested_key": "value"}}
-        output = logger.exit_run(
-            results, key_transform="pascal_case", exit_on_completion=False
-        )
+        output = logger.exit_run(results, key_transform="pascal_case", exit_on_completion=False)
         assert "MyKey" in output
         assert "NestedKey" in output["MyKey"]
 
-    def test_exit_run_key_transform_kebab_case(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_exit_run_key_transform_kebab_case(self, logger: Logging, tmp_path: Path) -> None:
         """Test key_transform with kebab_case string."""
         os.chdir(tmp_path)
         results = {"myKey": {"nestedKey": "value"}}
-        output = logger.exit_run(
-            results, key_transform="kebab_case", exit_on_completion=False
-        )
+        output = logger.exit_run(results, key_transform="kebab_case", exit_on_completion=False)
         assert "my-key" in output
         assert "nested-key" in output["my-key"]
 
-    def test_exit_run_key_transform_custom_callable(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_exit_run_key_transform_custom_callable(self, logger: Logging, tmp_path: Path) -> None:
         """Test key_transform with custom callable."""
         os.chdir(tmp_path)
         results = {"myKey": {"nestedKey": "value"}}
-        output = logger.exit_run(
-            results, key_transform=lambda k: k.upper(), exit_on_completion=False
-        )
+        output = logger.exit_run(results, key_transform=lambda k: k.upper(), exit_on_completion=False)
         assert "MYKEY" in output
         assert "NESTEDKEY" in output["MYKEY"]
 
-    def test_exit_run_key_transform_invalid_raises(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_exit_run_key_transform_invalid_raises(self, logger: Logging, tmp_path: Path) -> None:
         """Test that invalid key_transform string raises ValueError."""
         os.chdir(tmp_path)
         with pytest.raises(ValueError, match="Unknown key_transform"):
-            logger.exit_run(
-                {"key": "value"}, key_transform="invalid_case", exit_on_completion=False
-            )
+            logger.exit_run({"key": "value"}, key_transform="invalid_case", exit_on_completion=False)
 
-    def test_exit_run_key_transform_nested_lists(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_exit_run_key_transform_nested_lists(self, logger: Logging, tmp_path: Path) -> None:
         """Test key_transform handles nested lists of dicts."""
         os.chdir(tmp_path)
         results = {"myList": [{"itemKey": "v1"}, {"itemKey": "v2"}]}
-        output = logger.exit_run(
-            results, key_transform="snake_case", exit_on_completion=False
-        )
+        output = logger.exit_run(results, key_transform="snake_case", exit_on_completion=False)
         assert "my_list" in output
         assert all("item_key" in item for item in output["my_list"])
 
@@ -217,9 +185,7 @@ class TestExitRunNoExit:
         assert "pre_normal_field" in output["item1"]
         assert "excluded_field" in output["item1"]
 
-    def test_exit_run_prefix_with_nested_lists(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_exit_run_prefix_with_nested_lists(self, logger: Logging, tmp_path: Path) -> None:
         """Test exit_run with prefix transforms keys in nested lists of dicts."""
         os.chdir(tmp_path)
         results = {
@@ -254,9 +220,7 @@ class TestExitRunNoExit:
         assert "zebra" in output
         assert "apple" in output
 
-    def test_exit_run_sort_by_field_duplicate_values(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_exit_run_sort_by_field_duplicate_values(self, logger: Logging, tmp_path: Path) -> None:
         """Test sort_by_field handles duplicate field values without data loss."""
         os.chdir(tmp_path)
         results = {
@@ -284,9 +248,7 @@ class TestExitRunNoExit:
         assert output["same_value_2"]["data"] == "third"
         assert output["unique"]["data"] == "fourth"
 
-    def test_exit_run_sort_missing_field_raises(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_exit_run_sort_missing_field_raises(self, logger: Logging, tmp_path: Path) -> None:
         """Test that sort_by_field raises when field is missing."""
         os.chdir(tmp_path)
         results = {"a": {"otherField": "value"}}
@@ -310,9 +272,7 @@ class TestExitRunNoExit:
 class TestExitRunWithExit:
     """Tests for exit_run with exit_on_completion=True."""
 
-    def test_exit_run_writes_to_stdout_and_exits(
-        self, logger: Logging, tmp_path: Path
-    ) -> None:
+    def test_exit_run_writes_to_stdout_and_exits(self, logger: Logging, tmp_path: Path) -> None:
         """Test that exit_run writes JSON to stdout and exits."""
         os.chdir(tmp_path)
         results = {"key": "value"}
