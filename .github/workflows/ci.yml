@@ -81,6 +81,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: [build, test, lint]
     runs-on: ubuntu-latest
+    environment: pypi
 
     permissions:
       contents: write
@@ -134,7 +135,6 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           skip-existing: true
-        environment: pypi
 
       - name: Create GitHub Release
         if: steps.check.outputs.should_release == 'true'
