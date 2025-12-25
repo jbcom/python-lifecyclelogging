@@ -10,7 +10,7 @@ exclude = [".github"]
 
 [project]
 name = "lifecyclelogging"
-version = "0.3.0"
+version = "1.0.0"
 description = "A comprehensive logging utility for managing application lifecycle logs"
 requires-python = ">=3.9"
 license = { text = "MIT" }
