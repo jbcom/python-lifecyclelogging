@@ -25,7 +25,7 @@ jobs:
     name: Build package
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -44,14 +44,14 @@ jobs:
         python-version: ["3.9", "3.13"]
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v7
         with:
-          python-version: ${{ matrix.python-version }}
-          allow-prereleases: true
+          enable-cache: true
 
-      - uses: hynek/setup-cached-uv@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: uv sync --extra tests
@@ -64,13 +64,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v7
         with:
-          python-version: "3.13"
+          enable-cache: true
 
-      - uses: hynek/setup-cached-uv@v2
+      - name: Set up Python
+        run: uv python install 3.13
 
       - run: uvx ruff check src/ tests/
       - run: uvx ruff format --check src/ tests/
@@ -80,13 +81,15 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: [build, test, lint]
     runs-on: ubuntu-latest
+    environment: pypi
 
     permissions:
       contents: write
       id-token: write
+      attestations: write
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -96,7 +99,9 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - uses: hynek/setup-cached-uv@v2
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
 
       - name: Install python-semantic-release
         run: uv tool install python-semantic-release
@@ -120,7 +125,7 @@ jobs:
 
       - name: Download packages
         if: steps.check.outputs.should_release == 'true'
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v4
         with:
           name: Packages
           path: dist
@@ -129,7 +134,6 @@ jobs:
         if: steps.check.outputs.should_release == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          password: ${{ secrets.PYPI_TOKEN }}
           skip-existing: true
 
       - name: Create GitHub Release
