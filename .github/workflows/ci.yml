@@ -77,70 +77,48 @@ jobs:
       - run: uvx ruff format --check src/ tests/
 
   release:
-    name: Release
+    name: Semantic Release
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: [build, test, lint]
     runs-on: ubuntu-latest
-    environment: pypi
+    concurrency:
+      group: release-${{ github.ref_name }}
+      cancel-in-progress: false
 
     permissions:
       contents: write
       id-token: write
-      attestations: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Setup | Checkout Repository at workflow sha
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.sha }}
 
-      - name: Git config
+      - name: Setup | Force release branch to workflow sha
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B ${{ github.ref_name }} ${{ github.sha }}
 
-      - uses: astral-sh/setup-uv@v7
+      - name: Action | Semantic Version Release
+        id: release
+        # Use official python-semantic-release action
+        uses: python-semantic-release/python-semantic-release@v9.14.0
         with:
-          enable-cache: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git_committer_name: "github-actions[bot]"
+          git_committer_email: "github-actions[bot]@users.noreply.github.com"
 
-      - name: Install python-semantic-release
-        run: uv tool install python-semantic-release
-
-      - name: Check if release needed
-        id: check
-        run: |
-          NEW_VERSION=$(semantic-release --noop version --print 2>/dev/null || true)
-          if [ -n "$NEW_VERSION" ]; then
-            echo "should_release=true" >> $GITHUB_OUTPUT
-            echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          else
-            echo "should_release=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Release version
-        if: steps.check.outputs.should_release == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: semantic-release version
-
-      - name: Download packages
-        if: steps.check.outputs.should_release == 'true'
-        uses: actions/download-artifact@v4
+      - name: Publish | Upload to GitHub Release Assets
+        uses: python-semantic-release/upload-to-gh-release@main
+        if: steps.release.outputs.released == 'true'
         with:
-          name: Packages
-          path: dist
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.release.outputs.tag }}
 
-      - name: Publish to PyPI
-        if: steps.check.outputs.should_release == 'true'
+      - name: Publish | Upload package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        if: steps.release.outputs.released == 'true'
         with:
+          password: ${{ secrets.PYPI_TOKEN }}
           skip-existing: true
-
-      - name: Create GitHub Release
-        if: steps.check.outputs.should_release == 'true'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ steps.check.outputs.version }}
-          name: v${{ steps.check.outputs.version }}
-          files: dist/*
-          token: ${{ secrets.GITHUB_TOKEN }}
