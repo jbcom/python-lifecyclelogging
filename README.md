@@ -1,11 +1,12 @@
 # LifecycleLogging
 
-[![LifecycleLogging Logo](docs/_static/logo.png)](https://github.com/jbcom/lifecyclelogging)
-
 A comprehensive logging utility for managing application lifecycle logs, combining the power of Python's `logging` with rich output formatting.
 
-[![Documentation](https://img.shields.io/badge/docs-github.io-blue.svg)](https://jbcom.github.io/lifecyclelogging/)
-[![GitHub](https://img.shields.io/badge/github-repo-black.svg)](https://github.com/jbcom/lifecyclelogging)
+[![PyPI version](https://img.shields.io/pypi/v/lifecyclelogging.svg)](https://pypi.org/project/lifecyclelogging/)
+[![Python versions](https://img.shields.io/pypi/pyversions/lifecyclelogging.svg)](https://pypi.org/project/lifecyclelogging/)
+[![Documentation](https://img.shields.io/badge/docs-github.io-blue.svg)](https://extended-data-library.github.io/logging/)
+[![License](https://img.shields.io/pypi/l/lifecyclelogging.svg)](https://github.com/extended-data-library/logging/blob/main/LICENSE)
+[![GitHub](https://img.shields.io/badge/github-repo-black.svg)](https://github.com/extended-data-library/logging)
 
 ## Installation
 

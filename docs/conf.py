@@ -58,6 +58,7 @@ source_suffix = {
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 html_title = f"{project} Documentation"
+html_css_files = ['custom.css']  # Load jbcom branding
 
 html_theme_options = {
     "navigation_depth": 4,

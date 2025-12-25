@@ -1,11 +1,43 @@
-.. PACKAGE_NAME documentation master file
-   Synced from jbcom-control-center - customize for your project
+.. LifecycleLogging documentation master file
+   Lifecycle-aware logging utilities for Python
 
-=======================================
-PACKAGE_NAME Documentation
-=======================================
+========================================
+LifecycleLogging Documentation
+========================================
 
-.. TODO: Add your project description here
+**Lifecycle-aware logging utilities for Python applications.**
+
+LifecycleLogging provides a comprehensive logging solution that combines Python's standard logging with rich output formatting, message storage, and lifecycle event tracking.
+
+Features
+--------
+
+* Configurable console and file logging outputs
+* Rich formatting for enhanced readability  
+* Message storage with context and storage markers
+* Verbosity controls with bypass markers
+* JSON data attachment support
+* Type-safe implementation
+* Seamless integration with existing logging systems
+* Automatic Gunicorn logger integration
+
+Quick Start
+-----------
+
+Install from PyPI:
+
+.. code-block:: bash
+
+   pip install lifecyclelogging
+
+Basic usage:
+
+.. code-block:: python
+
+   from lifecyclelogging import Logging
+
+   logger = Logging(enable_console=True)
+   logger.logged_statement("Hello, world!", log_level="info")
 
 .. toctree::
    :maxdepth: 2
