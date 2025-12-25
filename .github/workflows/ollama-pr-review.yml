@@ -62,7 +62,11 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
           # Use CI_GITHUB_TOKEN to allow commits to trigger workflows
+<<<<<<< HEAD
           token: ${{ secrets.CI_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+=======
+          token: ${{ github.token }}
+>>>>>>> 3cad9ca (fix(ci): use github.token explicitly for checkout)
 
       - name: Get PR diff
         env:
@@ -254,7 +258,11 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
           # Use CI_GITHUB_TOKEN to allow commits to trigger workflows
+<<<<<<< HEAD
           token: ${{ secrets.CI_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+=======
+          token: ${{ github.token }}
+>>>>>>> 3cad9ca (fix(ci): use github.token explicitly for checkout)
 
       - name: Checkout PR branch
         env:
@@ -451,7 +459,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+<<<<<<< HEAD
           token: ${{ secrets.CI_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+=======
+          token: ${{ github.token }}
+>>>>>>> 3cad9ca (fix(ci): use github.token explicitly for checkout)
 
       - name: Checkout PR branch
         env:
@@ -624,7 +636,11 @@ jobs:
         with:
           fetch-depth: 0
           # Use CI_GITHUB_TOKEN to allow commits to trigger workflows
+<<<<<<< HEAD
           token: ${{ secrets.CI_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+=======
+          token: ${{ github.token }}
+>>>>>>> 3cad9ca (fix(ci): use github.token explicitly for checkout)
 
       - name: Get PR number
         id: pr
