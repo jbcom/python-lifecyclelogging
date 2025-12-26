@@ -1,12 +1,16 @@
-# LifecycleLogging
+# @extended-data-library/logging
 
 A comprehensive logging utility for managing application lifecycle logs, combining the power of Python's `logging` with rich output formatting.
 
 [![PyPI version](https://img.shields.io/pypi/v/lifecyclelogging.svg)](https://pypi.org/project/lifecyclelogging/)
 [![Python versions](https://img.shields.io/pypi/pyversions/lifecyclelogging.svg)](https://pypi.org/project/lifecyclelogging/)
-[![Documentation](https://img.shields.io/badge/docs-github.io-blue.svg)](https://extended-data-library.github.io/logging/)
+[![Documentation](https://img.shields.io/badge/docs-github.io-blue.svg)](https://extendeddata.dev)
 [![License](https://img.shields.io/pypi/l/lifecyclelogging.svg)](https://github.com/extended-data-library/logging/blob/main/LICENSE)
 [![GitHub](https://img.shields.io/badge/github-repo-black.svg)](https://github.com/extended-data-library/logging)
+
+## 🏢 Enterprise Context
+
+**Extended Data** is the Infrastructure & Libs division of the [jbcom enterprise](https://jbcom.github.io). This logging library is part of a coherent suite of specialized tools, sharing a unified design system and interconnected with sibling organizations like [Agentic](https://agentic.dev) and [Strata](https://strata.game).
 
 ## Installation
 
